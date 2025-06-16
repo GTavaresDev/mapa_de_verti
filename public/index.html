@@ -18,17 +18,27 @@
             --cor-primaria: #2c3e50;
             --cor-secundaria: #34495e;
             --cor-texto: #ecf0f1;
-            --cor-canvas: #ecf0f1; /* Fundo sólido para o canvas */
+            --cor-canvas: #ecf0f1; /* Fundo do canvas (claro) */
             --cor-vertice: #3498db;
             --cor-vertice-origem: #2ecc71;
             --cor-vertice-destino: #e74c3c;
             --cor-aresta: #7f8c8d;
             --cor-aresta-caminho: #f1c40f;
-            --cor-aresta-texto: #2c3e50;
+            --cor-aresta-texto: #2c3e50; /* Texto da aresta (escuro) */
+            --cor-aresta-fundo-texto: rgba(236, 240, 241, 0.8);
             --cor-botao-acao: #27ae60;
             --cor-botao-download: #f39c12; 
             --cor-botao-remover: #c0392b;
             --cor-botao-gerar: #9b59b6;
+            --cor-botao-tema: #16a085;
+        }
+
+        /* Estilos para o Modo Noturno */
+        body.dark-mode {
+            --cor-canvas: #34495e;
+            --cor-aresta: #95a5a6;
+            --cor-aresta-texto: #ecf0f1; /* Texto da aresta (claro) */
+            --cor-aresta-fundo-texto: rgba(44, 62, 80, 0.7);
         }
 
         body {
@@ -73,7 +83,7 @@
             padding: 12px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9em; /* Ajuste para caber mais botões */
+            font-size: 0.9em;
             width: 100%;
             margin-bottom: 8px;
             transition: background-color 0.3s, transform 0.1s;
@@ -99,6 +109,9 @@
         }
         #baixarImagemBtn { 
             background-color: var(--cor-botao-download);
+        }
+        #modoNoturnoBtn {
+            background-color: var(--cor-botao-tema);
         }
         #limparBtn {
             background-color: var(--cor-vertice-destino);
@@ -126,6 +139,7 @@
             background-color: var(--cor-canvas);
             border-radius: 8px;
             cursor: crosshair;
+            transition: background-color 0.3s;
         }
     </style>
 </head>
@@ -153,6 +167,7 @@
             <button id="gerarGrafoBtn">Gerar Grafo Aleatório</button>
             <button id="calcularRotaBtn">Calcular Menor Caminho</button>
             <button id="baixarImagemBtn">Baixar Imagem</button> 
+            <button id="modoNoturnoBtn">Modo Noturno</button>
         </div>
 
         <div class="control-group">

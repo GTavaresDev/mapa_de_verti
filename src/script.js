@@ -11,6 +11,7 @@ const modoSelecionarDestinoBtn = document.getElementById('modoSelecionarDestinoB
 const gerarGrafoBtn = document.getElementById('gerarGrafoBtn');
 const calcularRotaBtn = document.getElementById('calcularRotaBtn');
 const baixarImagemBtn = document.getElementById('baixarImagemBtn');
+const modoNoturnoBtn = document.getElementById('modoNoturnoBtn');
 const limparBtn = document.getElementById('limparBtn');
 const statusInfo = document.getElementById('status-info');
 const resultadoInfo = document.getElementById('resultado-info');
@@ -21,6 +22,7 @@ let primeiroVerticeSelecionado = null;
 let verticeOrigem = null;
 let verticeDestino = null;
 let caminhoCalculado = [];
+let modoNoturnoAtivo = false;
 
 // --- CLASSE FILA DE PRIORIDADE ---
 class PriorityQueue {
@@ -194,7 +196,7 @@ function desenharAresta(u, v, fazParteDoCaminho) {
     const midX = (u.coords.x + v.coords.x) / 2, midY = (u.coords.y + v.coords.y) / 2;
     const text = peso.toString();
     const textWidth = ctx.measureText(text).width;
-    ctx.fillStyle = 'rgba(236, 240, 241, 0.8)';
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--cor-aresta-fundo-texto');
     ctx.fillRect(midX - textWidth / 2 - 4, midY - 12, textWidth + 8, 16);
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--cor-aresta-texto');
     ctx.font = "bold 12px Arial";
@@ -363,34 +365,35 @@ function gerarGrafoAleatorio() {
 
 function inicializar() {
     function resize() {
-        canvas.width = canvasContainer.clientWidth;
-        canvas.height = canvasContainer.clientHeight;
+        canvas.width = canvasContainer.clientWidth - 40;
+        canvas.height = canvasContainer.clientHeight - 40;
         desenharGrafoCompleto();
     }
+
     window.addEventListener('resize', resize);
-    
     canvas.addEventListener('click', eventoCliqueCanvas);
-    limparBtn.addEventListener('click', () => limparTudo(true));
+    
+    modoAdicionarVerticeBtn.addEventListener('click', () => mudarModo('adicionar_vertice'));
+    modoAdicionarArestaBtn.addEventListener('click', () => mudarModo('adicionar_aresta'));
+    modoRemoverVerticeBtn.addEventListener('click', () => mudarModo('remover_vertice'));
+    modoRemoverArestaBtn.addEventListener('click', () => mudarModo('remover_aresta'));
+    modoSelecionarOrigemBtn.addEventListener('click', () => mudarModo('selecionar_origem'));
+    modoSelecionarDestinoBtn.addEventListener('click', () => mudarModo('selecionar_destino'));
+    gerarGrafoBtn.addEventListener('click', gerarGrafoAleatorio);
     calcularRotaBtn.addEventListener('click', calcularRota);
     baixarImagemBtn.addEventListener('click', baixarImagemGrafo);
-    gerarGrafoBtn.addEventListener('click', gerarGrafoAleatorio);
-    
-    const mapaBotoes = {
-        'adicionar_vertice': modoAdicionarVerticeBtn,
-        'adicionar_aresta': modoAdicionarArestaBtn,
-        'remover_vertice': modoRemoverVerticeBtn,
-        'remover_aresta': modoRemoverArestaBtn,
-        'selecionar_origem': modoSelecionarOrigemBtn,
-        'selecionar_destino': modoSelecionarDestinoBtn
-    };
+    limparBtn.addEventListener('click', () => limparTudo(true));
+    modoNoturnoBtn.addEventListener('click', alternarModoNoturno);
 
-    for (const modo in mapaBotoes) {
-        mapaBotoes[modo].addEventListener('click', () => mudarModo(modo));
-    }
-    
-    resize(); 
-    gerarGrafoAleatorio(); 
-    mudarModo('adicionar_vertice'); 
+    resize();
+    mudarModo('adicionar_vertice');
+}
+
+function alternarModoNoturno() {
+    modoNoturnoAtivo = !modoNoturnoAtivo;
+    document.body.classList.toggle('dark-mode', modoNoturnoAtivo);
+    modoNoturnoBtn.textContent = modoNoturnoAtivo ? 'Modo Claro' : 'Modo Noturno';
+    desenharGrafoCompleto();
 }
 
 // Inicializa a aplicação quando o DOM estiver carregado
