@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Criando meta tag para quando a pessoa compartilhar o link do  site-->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sistema de Navegação Primitivo - AED2" />
+    <meta property="og:image" content="https://mapa-aed-2.vercel.app" />
+    <meta property="og:description" content="Sistema de Navegação Primitivo - AED2" />
+    <meta property="og:site_name" content="Sistema de Navegação Primitivo - AED2" />
+
+    <title>Sistema de Navegação Primitivo - AED2</title>
+
+    <style>
+        :root {
+            --cor-primaria: #2c3e50;
+            --cor-secundaria: #34495e;
+            --cor-texto: #ecf0f1;
+            --cor-canvas: #ecf0f1; /* Fundo sólido para o canvas */
+            --cor-vertice: #3498db;
+            --cor-vertice-origem: #2ecc71;
+            --cor-vertice-destino: #e74c3c;
+            --cor-aresta: #7f8c8d;
+            --cor-aresta-caminho: #f1c40f;
+            --cor-aresta-texto: #2c3e50;
+            --cor-botao-acao: #27ae60;
+            --cor-botao-download: #f39c12; 
+            --cor-botao-remover: #c0392b;
+            --cor-botao-gerar: #9b59b6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: var(--cor-primaria);
+            color: var(--cor-texto);
+        }
+
+        .controls {
+            width: 280px;
+            padding: 20px;
+            background-color: var(--cor-secundaria);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 10;
+        }
+        .controls h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            text-align: center;
+            border-bottom: 1px solid var(--cor-texto);
+            padding-bottom: 10px;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        .control-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: var(--cor-texto);
+        }
+        .controls button {
+            background-color: var(--cor-vertice);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em; /* Ajuste para caber mais botões */
+            width: 100%;
+            margin-bottom: 8px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .controls button:hover {
+            opacity: 0.9;
+        }
+        .controls button:active {
+            transform: scale(0.98);
+        }
+        .controls button.active {
+            background-color: var(--cor-vertice-origem);
+            font-weight: bold;
+        }
+        #modoRemoverVerticeBtn.active, #modoRemoverArestaBtn.active {
+             background-color: var(--cor-botao-remover);
+        }
+        #gerarGrafoBtn {
+            background-color: var(--cor-botao-gerar);
+        }
+        #calcularRotaBtn {
+            background-color: var(--cor-botao-acao);
+        }
+        #baixarImagemBtn { 
+            background-color: var(--cor-botao-download);
+        }
+        #limparBtn {
+            background-color: var(--cor-vertice-destino);
+        }
+        .info-box {
+            background-color: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            min-height: 40px;
+            text-align: left; 
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .canvas-container {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        canvas {
+            background-color: var(--cor-canvas);
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <h2>Controles</h2>
+        
+        <div class="control-group">
+            <label>Modo de Edição:</label>
+            <button id="modoAdicionarVerticeBtn">Adicionar Vértice</button>
+            <button id="modoAdicionarArestaBtn">Adicionar Aresta</button>
+            <button id="modoRemoverVerticeBtn">Remover Vértice</button>
+            <button id="modoRemoverArestaBtn">Remover Aresta</button>
+        </div>
+        
+        <div class="control-group">
+            <label>Seleção de Rota:</label>
+            <button id="modoSelecionarOrigemBtn">Selecionar Origem</button>
+            <button id="modoSelecionarDestinoBtn">Selecionar Destino</button>
+        </div>
+        
+        <div class="control-group">
+             <label>Ações:</label>
+            <button id="gerarGrafoBtn">Gerar Grafo Aleatório</button>
+            <button id="calcularRotaBtn">Calcular Menor Caminho</button>
+            <button id="baixarImagemBtn">Baixar Imagem</button> 
+        </div>
+
+        <div class="control-group">
+            <label>Status:</label>
+            <div id="status-info" class="info-box">Selecione um modo.</div>
+        </div>
+        
+        <div class="control-group">
+            <label>Resultado:</label>
+            <div id="resultado-info" class="info-box">Nenhum cálculo realizado.</div>
+        </div>
+
+        <button id="limparBtn" style="margin-top: auto;">Limpar Tudo</button>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="graphCanvas"></canvas>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
